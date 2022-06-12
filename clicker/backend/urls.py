@@ -5,8 +5,9 @@ boosts_list = views.BoostViewSet.as_view({
     'get': 'list',
     'post': 'create',
 })
+
 boost_details = views.BoostViewSet.as_view({
-    'put': 'update',
+    'put': 'partial_update',
 })
 
 

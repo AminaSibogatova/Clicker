@@ -26,17 +26,36 @@ def call_click(request):
     core = Core.objects.get(user=request.user)
     is_levelup = core.click()
     if is_levelup:
-        Boost.objects.create(core=core, price=core.level * 50, power=core.level * 20)  # Создание буста
-    return Response({'core': CoreSerializer(core).data, 'is_levelup': is_levelup})
+        Boost.objects.create(core=core, price=core.level * 50, power=core.level * 20)
+    core.save()
+
+    return Response({
+        'core': CoreSerializer(core).data,
+        'is_levelup': is_levelup,
+    })
+
 
 class BoostViewSet(viewsets.ModelViewSet):
     queryset = Boost.objects.all()
     serializer_class = BoostSerializer
 
     def get_queryset(self):
-        core = Core.objects.get(user=self.request.user) # Получение ядра пользователя
-        boosts = Boost.objects.filter(core=core) # Получение бустов ядра
+        core = Core.objects.get(user=self.request.user)
+        boosts = self.queryset.filter(core=core)
         return boosts
+
+    def partial_update(self, request, pk):
+        boost = self.queryset.get(pk=pk)
+        levelup = boost.levelup()
+        if not levelup:
+            return Response({'error': 'malo deneg'})
+        old_boost_values, new_boost_values = levelup
+        return Response({
+            'old_boost_values': self.serializer_class(old_boost_values).data,
+            'new_boost_values': self.serializer_class(new_boost_values).data,
+        })
+
+
 
 
 def register(request):
