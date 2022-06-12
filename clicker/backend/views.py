@@ -24,9 +24,9 @@ def index(request):
 @login_required
 def call_click(request):
     core = Core.objects.get(user=request.user)
-    is_levelup = core.click()
+    is_levelup, boost_type = core.click()
     if is_levelup:
-        Boost.objects.create(core=core, price=core.level * 50, power=core.level * 20)
+        Boost.objects.create(core=core, price=core.coins, power=core.level * 5, type=boost_type,)
     core.save()
 
     return Response({
