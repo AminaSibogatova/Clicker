@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load static %}
+{% block body %}
+    <head>
+        <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
+    </head>
+    WELCOME TO OUR BEAUTIFUL CLICKER
+    coins = {{core.coins}}
+    click_power = {{core.click_power}}
+
+{% end block %}
