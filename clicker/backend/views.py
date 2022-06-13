@@ -21,13 +21,19 @@ def index(request):
 
 
 @api_view(['GET'])
-@login_required
-def call_click(request):
+def get_core(request):
     core = Core.objects.get(user=request.user)
-    is_levelup, boost_type = core.click()
+    return Response({'core': CoreSerializer(core).data})
+
+
+@api_view(['POST'])
+@login_required
+def update_coins(request):
+    coins = request.data['coins']
+    core = Core.objects.get(user=request.user)
+    is_levelup, boost_type = core.update_coins(coins)
     if is_levelup:
         Boost.objects.create(core=core, price=core.coins, power=core.level * 5, type=boost_type,)
-    core.save()
 
     return Response({
         'core': CoreSerializer(core).data,
@@ -45,8 +51,9 @@ class BoostViewSet(viewsets.ModelViewSet):
         return boosts
 
     def partial_update(self, request, pk):
+        coins = request.data['current_coins']
         boost = self.queryset.get(pk=pk)
-        levelup = boost.levelup()
+        levelup = boost.levelup(coins)
         if not levelup:
             return Response({'error': 'malo deneg'})
         old_boost_values, new_boost_values = levelup
@@ -54,8 +61,6 @@ class BoostViewSet(viewsets.ModelViewSet):
             'old_boost_values': self.serializer_class(old_boost_values).data,
             'new_boost_values': self.serializer_class(new_boost_values).data,
         })
-
-
 
 
 def register(request):
