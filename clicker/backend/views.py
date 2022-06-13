@@ -29,7 +29,7 @@ def get_core(request):
 @api_view(['POST'])
 @login_required
 def update_coins(request):
-    coins = request.data['coins']
+    coins = request.data['current_coins']
     core = Core.objects.get(user=request.user)
     is_levelup, boost_type = core.update_coins(coins)
     if is_levelup:

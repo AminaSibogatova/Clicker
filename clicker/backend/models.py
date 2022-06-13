@@ -27,9 +27,9 @@ class Core(models.Model):
         return is_levelupdated, boost_type
 
     def is_levelup(self):
-        return self.coins >= self.calculate_next_level()
+        return self.coins >= self.calculate_next_level_price()
 
-    def calculate_next_level(self):
+    def calculate_next_level_price(self):
         return (self.level ** 2) * 100 * (self.level)
 
 

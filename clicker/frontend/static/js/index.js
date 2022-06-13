@@ -44,8 +44,6 @@ let Game = new GameSession() // Экземпляр класса GameSession.
 
 /** Функция обработки клика пользователя на какаши. */
 function call_click() {
-    const kakashiNode = document.getElementById('kakashi')
-    click_animation(kakashiNode, 50)
     Game.add_coins(Game.click_power)
 }
 
@@ -81,18 +79,9 @@ function add_boost(parent, boost) {
     parent.appendChild(button)
 }
 
-/** Функция для анимации элемента, по которому происходит клик. */
-function click_animation(node, time_ms) {
-    css_time = `.0${time_ms}s`
-    node.style.cssText = `transition: all ${css_time} linear; transform: scale(0.95);`
-    setTimeout(function() {
-        node.style.cssText = `transition: all ${css_time} linear; transform: scale(1);`
-    }, time_ms)
-}
-
 /** Функция получения данных об игре пользователя с бэкенда. */
 function getCore() {
-    return fetch('/backend/get_core/', {
+    return fetch('/backend/core/', {
         method: 'GET'
     }).then(response => {
         if (response.ok) {
@@ -150,22 +139,22 @@ function get_boosts() {
 /** Функция покупки буста. */
 function buy_boost(boost_id) {
     const csrftoken = getCookie('csrftoken')
-    return fetch('/backend/boosts/${boost_id}/', {
+    return fetch(`/backend/boosts/${boost_id}/`, {
         method: 'PUT',
         headers: {
             "X-CSRFToken": csrftoken,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            coins: Game.coins
+            current_coins: Game.coins
         })
     }).then(response => {
         if (response.ok) return response.json()
         return Promise.reject(response)
     }).then(response => {
         if (response.error) return
-        const old_boost_stats = response.old_boost_stats
-        const new_boost_stats = response.new_boost_stats
+        const old_boost_stats = response.old_boost_values
+        const new_boost_stats = response.new_boost_values
 
         Game.add_coins(-old_boost_stats.price)
         if (old_boost_stats.type === 1) {

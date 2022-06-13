@@ -8,15 +8,25 @@
 <body>
     <main class="app" align="center">
         <nav class="nav">
-            Привет, {{ user.username }}
+            Добро пожаловат, путник {{ user.username }}
+            <br>
+            С Наступающим сэнсэй! За ваше здоровье!
+            <br>
             <a href="{% url 'logout' %}">Выйти</a>
         </nav>
 
         <div class="container">
             <div id='coins'>{{core.coins}}</div>
-            <button onclick="call_click()">Нажми меня</button>
+            <image height=45% src = "{% static 'img/pivo.png' %}" onclick="call_click()">
+                <br>
+                выпей меня
+            </image>
             <p>
                 Невероятная мощь клика: <span id="click_power">{{ core.click_power }}</span>
+            </p>
+             <p>
+                     Самостоятельная дружина кликеров. Чел:
+                     <span id="auto_click_power">{{ core.auto_click_power }}</span>
             </p>
         </div>
 
@@ -31,10 +41,6 @@
                     </button>
                 {% endfor %}
             </div>
-            <p>
-                     Самостоятельная дружина кликеров. Чел:
-                     <span id="auto_click_power">{{ core.auto_click_power }}</span>
-            </p>
         </aside>
     </main>
 </body>

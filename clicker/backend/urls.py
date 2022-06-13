@@ -19,7 +19,7 @@ urlpatterns = [
     path('core/', views.get_core, name='get_core'),
     path('', views.index, name='index'),
     path('boosts/', boosts_list, name='boosts'),
-    path('boosts/<int:pk>', boost_details, name='boosts')
+    path('boosts/<int:pk>/', boost_details, name='boosts')
 ]
 
 
